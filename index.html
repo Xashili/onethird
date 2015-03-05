@@ -1859,18 +1859,18 @@ Elm.Main.make = function (_elm) {
               $Basics.degrees(200),
               0.7);}
          _U.badCase($moduleName,
-         "between lines 267 and 277");
+         "between lines 278 and 288");
       }();
    });
    var colorAt = F3(function (t,
    p,
    f) {
       return function () {
-         var hue = 0.5 - A2($Basics.max,
-         0,
+         var hue = A2($Basics.max,
+         0.0,
          A2($Basics.min,
          0.5,
-         $Basics.abs(f.l - p.l) / 80));
+         2 / $Basics.abs(f.l - p.l)));
          return A2(colorFrom,
          t,
          f.thing)(hue);
@@ -1895,7 +1895,7 @@ Elm.Main.make = function (_elm) {
               "!\n\n",
               "Spawn by smashing space, use arrow keys to move")))))))));}
          _U.badCase($moduleName,
-         "between lines 253 and 256");
+         "between lines 264 and 267");
       }();
    });
    var first = F3(function (f,
@@ -1910,7 +1910,7 @@ Elm.Main.make = function (_elm) {
               xs._1);
             case "[]": return $default;}
          _U.badCase($moduleName,
-         "between lines 216 and 224");
+         "between lines 223 and 231");
       }();
    });
    var doCollide = F2(function (o,
@@ -1935,7 +1935,7 @@ Elm.Main.make = function (_elm) {
             case "Wave":
             return "drowned in water";}
          _U.badCase($moduleName,
-         "between lines 192 and 195");
+         "between lines 199 and 202");
       }();
    };
    var updateLists = function (g) {
@@ -2162,7 +2162,7 @@ Elm.Main.make = function (_elm) {
                       g);}
                  break;}
             _U.badCase($moduleName,
-            "between lines 184 and 189");
+            "between lines 191 and 196");
          }();
       }();
    };
@@ -2198,6 +2198,9 @@ Elm.Main.make = function (_elm) {
          switch (_v26.ctor)
          {case "_Tuple2":
             return function () {
+                 var strToForm = function (s) {
+                    return $Graphics$Collage.toForm($Text.centered($Text.height(28)($Text.fromString(s))));
+                 };
                  var $ = A2(firsts,
                  function (_) {
                     return _.vis;
@@ -2225,10 +2228,17 @@ Elm.Main.make = function (_elm) {
                                                       ,_1: 0})($Graphics$Collage.filled(fc)(c))
                               ,$Graphics$Collage.move({ctor: "_Tuple2"
                                                       ,_0: wf * (1 / 4)
-                                                      ,_1: 0})($Graphics$Collage.filled(bc)(c))]));
+                                                      ,_1: 0})($Graphics$Collage.filled(bc)(c))
+                              ,$Graphics$Collage.move({ctor: "_Tuple2"
+                                                      ,_0: (0 - wf) * (1 / 4)
+                                                      ,_1: -1.2 * (wf / 5)})(strToForm("Front"))
+                              ,$Graphics$Collage.move({ctor: "_Tuple2"
+                                                      ,_0: wf * (1 / 4)
+                                                      ,_1: -1.2 * (wf / 5)})(strToForm("Back"))
+                              ,$Graphics$Collage.moveY(wf / 5)(strToForm(g.desc))]));
               }();}
          _U.badCase($moduleName,
-         "between lines 245 and 251");
+         "between lines 252 and 262");
       }();
    });
    var display = F2(function (_v30,
@@ -2257,15 +2267,16 @@ Elm.Main.make = function (_elm) {
                          ,_1: _v30._1},
                          g);}
                     _U.badCase($moduleName,
-                    "between lines 230 and 242");
+                    "between lines 237 and 249");
                  }();
               }();}
          _U.badCase($moduleName,
-         "between lines 228 and 242");
+         "between lines 235 and 249");
       }();
    });
    var level2 = {_: {}
                 ,back: _L.fromArray([])
+                ,desc: "Level 2\nKeep distance"
                 ,front: _L.fromArray([A3(toPos,
                                      lava(0),
                                      40,
@@ -2276,6 +2287,7 @@ Elm.Main.make = function (_elm) {
                                      ,A3(toPos,wall,200,230)])};
    var level1 = {_: {}
                 ,back: _L.fromArray([])
+                ,desc: "Level 1\nExplore!"
                 ,front: _L.fromArray([A3(toPos,
                                      lava(0),
                                      60,
@@ -2286,13 +2298,17 @@ Elm.Main.make = function (_elm) {
                                      exit(level2),
                                      300,
                                      330)])};
-   var Level = F2(function (a,b) {
+   var Level = F3(function (a,
+   b,
+   c) {
       return {_: {}
              ,back: b
+             ,desc: c
              ,front: a};
    });
    var defaultGame = {_: {}
                      ,back: _L.fromArray([])
+                     ,desc: ""
                      ,front: _L.fromArray([])
                      ,killedBy: "are flat"
                      ,player: {_: {}
@@ -2305,11 +2321,13 @@ Elm.Main.make = function (_elm) {
       return function () {
          var $ = level,
          front = $.front,
-         back = $.back;
+         back = $.back,
+         desc = $.desc;
          return _U.replace([["front"
                             ,front]
                            ,["back",back]
                            ,["resetTo",level]
+                           ,["desc",desc]
                            ,["player"
                             ,{_: {}
                              ,alive: true
@@ -2333,7 +2351,7 @@ Elm.Main.make = function (_elm) {
             switch (_.ctor)
             {case "_Tuple2": return _._0;}
             _U.badCase($moduleName,
-            "on line 171, column 21 to 36");
+            "on line 178, column 21 to 36");
          }();
          var next = function () {
             var _v40 = exit.thing;
@@ -2356,14 +2374,16 @@ Elm.Main.make = function (_elm) {
          g))))));
       }();
    });
-   var GameState = F6(function (a,
+   var GameState = F7(function (a,
    b,
    c,
    d,
    e,
-   f) {
+   f,
+   g) {
       return {_: {}
              ,back: e
+             ,desc: g
              ,front: d
              ,killedBy: b
              ,player: c
