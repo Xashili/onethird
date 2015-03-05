@@ -1859,18 +1859,18 @@ Elm.Main.make = function (_elm) {
               $Basics.degrees(200),
               0.7);}
          _U.badCase($moduleName,
-         "between lines 258 and 268");
+         "between lines 267 and 277");
       }();
    });
    var colorAt = F3(function (t,
    p,
    f) {
       return function () {
-         var hue = A2($Basics.max,
-         0.0,
+         var hue = 0.5 - A2($Basics.max,
+         0,
          A2($Basics.min,
          0.5,
-         2 / $Basics.abs(f.l - p.l)));
+         $Basics.abs(f.l - p.l) / 80));
          return A2(colorFrom,
          t,
          f.thing)(hue);
@@ -1895,7 +1895,7 @@ Elm.Main.make = function (_elm) {
               "!\n\n",
               "Spawn by smashing space, use arrow keys to move")))))))));}
          _U.badCase($moduleName,
-         "between lines 244 and 247");
+         "between lines 253 and 256");
       }();
    });
    var first = F3(function (f,
@@ -2205,37 +2205,30 @@ Elm.Main.make = function (_elm) {
                  g),
                  f = $._0,
                  b = $._1;
-                 var half = A2($Graphics$Element.spacer,
-                 _v26._0,
-                 $Basics.floor($Basics.toFloat(_v26._1) / 2) - 50);
+                 var $ = {ctor: "_Tuple2"
+                         ,_0: $Basics.toFloat(_v26._0)
+                         ,_1: $Basics.toFloat(_v26._1)},
+                 wf = $._0,
+                 hf = $._1;
+                 var c = $Graphics$Collage.circle(wf / 5);
                  var p = g.player;
                  var $ = {ctor: "_Tuple2"
                          ,_0: A3(colorAt,g.time,p,f)
                          ,_1: A3(colorAt,g.time,p,b)},
                  fc = $._0,
-                 fb = $._1;
-                 var middle = $Graphics$Collage.gradient(A3($Color.linear,
-                 {ctor: "_Tuple2",_0: 0,_1: 0},
-                 {ctor: "_Tuple2",_0: 0,_1: 25},
-                 _L.fromArray([{ctor: "_Tuple2"
-                               ,_0: 0
-                               ,_1: fb}
-                              ,{ctor: "_Tuple2"
-                               ,_0: 1
-                               ,_1: fc}])))(A2($Graphics$Collage.rect,
-                 $Basics.toFloat(_v26._0),
-                 100));
-                 return A2($Graphics$Element.flow,
-                 $Graphics$Element.down,
-                 _L.fromArray([$Graphics$Element.color(fc)(half)
-                              ,A3($Graphics$Collage.collage,
-                              _v26._0,
-                              100,
-                              _L.fromArray([middle]))
-                              ,$Graphics$Element.color(fb)(half)]));
+                 bc = $._1;
+                 return A3($Graphics$Collage.collage,
+                 _v26._0,
+                 _v26._1,
+                 _L.fromArray([$Graphics$Collage.move({ctor: "_Tuple2"
+                                                      ,_0: (0 - wf) * (1 / 4)
+                                                      ,_1: 0})($Graphics$Collage.filled(fc)(c))
+                              ,$Graphics$Collage.move({ctor: "_Tuple2"
+                                                      ,_0: wf * (1 / 4)
+                                                      ,_1: 0})($Graphics$Collage.filled(bc)(c))]));
               }();}
          _U.badCase($moduleName,
-         "between lines 235 and 242");
+         "between lines 245 and 251");
       }();
    });
    var display = F2(function (_v30,
@@ -2264,11 +2257,11 @@ Elm.Main.make = function (_elm) {
                          ,_1: _v30._1},
                          g);}
                     _U.badCase($moduleName,
-                    "between lines 230 and 233");
+                    "between lines 230 and 242");
                  }();
               }();}
          _U.badCase($moduleName,
-         "between lines 228 and 233");
+         "between lines 228 and 242");
       }();
    });
    var level2 = {_: {}
