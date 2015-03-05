@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html><head><meta charset="UTF-8"><title>1thirD</title><style>html,head,body { padding:0; margin:0; }
+<html><head><meta charset="UTF-8"><title>Main</title><style>html,head,body { padding:0; margin:0; }
 body { font-family: calibri, helvetica, arial, sans-serif; }</style><script type="text/javascript">var Elm = Elm || { Native: {} };Elm.Basics = Elm.Basics || {};
 Elm.Basics.make = function (_elm) {
    "use strict";
@@ -1840,7 +1840,7 @@ Elm.Main.make = function (_elm) {
          switch (t.ctor)
          {case "Exit":
             return A2($Color.hsl,
-              $Basics.degrees(60),
+              $Basics.degrees(30),
               0.9);
             case "Lava":
             return A2($Color.hsl,
@@ -1852,7 +1852,7 @@ Elm.Main.make = function (_elm) {
               t._0 / 3000);
             case "Wall":
             return A2($Color.hsl,
-              $Basics.degrees(60),
+              $Basics.degrees(30),
               0.9);
             case "Wave":
             return A2($Color.hsl,
@@ -2280,7 +2280,7 @@ Elm.Main.make = function (_elm) {
                                      ,A3(toPos,lava(1000),70,80)
                                      ,A3(toPos,monster,140,141)
                                      ,A3(toPos,monster,180,181)
-                                     ,A3(toPos,wall,200,201)])};
+                                     ,A3(toPos,wall,200,230)])};
    var level1 = {_: {}
                 ,back: _L.fromArray([])
                 ,front: _L.fromArray([A3(toPos,
@@ -2292,7 +2292,7 @@ Elm.Main.make = function (_elm) {
                                      ,A3(toPos,
                                      exit(level2),
                                      300,
-                                     301)])};
+                                     330)])};
    var Level = F2(function (a,b) {
       return {_: {}
              ,back: b
