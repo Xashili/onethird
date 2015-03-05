@@ -2107,12 +2107,12 @@ Elm.Main.make = function (_elm) {
    });
    var backWall = A3(toPos,
    wall,
-   -10,
+   0,
    3);
    var frontWall = A3(toPos,
    wall,
    1000,
-   2000);
+   1003);
    var firsts = F2(function (f,g) {
       return {ctor: "_Tuple2"
              ,_0: A3(first,
@@ -2276,8 +2276,8 @@ Elm.Main.make = function (_elm) {
                                      40,
                                      50)
                                      ,A3(toPos,lava(1000),70,80)
-                                     ,A3(toPos,monster,140,141)
-                                     ,A3(toPos,monster,180,181)
+                                     ,A3(toPos,monster,140,142)
+                                     ,A3(toPos,monster,180,182)
                                      ,A3(toPos,wall,200,230)])};
    var level1 = {_: {}
                 ,back: _L.fromArray([])
