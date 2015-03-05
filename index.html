@@ -2107,12 +2107,12 @@ Elm.Main.make = function (_elm) {
    });
    var backWall = A3(toPos,
    wall,
-   0,
-   1);
+   -10,
+   3);
    var frontWall = A3(toPos,
    wall,
    1000,
-   1001);
+   2000);
    var firsts = F2(function (f,g) {
       return {ctor: "_Tuple2"
              ,_0: A3(first,
@@ -2229,12 +2229,6 @@ Elm.Main.make = function (_elm) {
                               ,$Graphics$Collage.move({ctor: "_Tuple2"
                                                       ,_0: wf * (1 / 4)
                                                       ,_1: 0})($Graphics$Collage.filled(bc)(c))
-                              ,$Graphics$Collage.move({ctor: "_Tuple2"
-                                                      ,_0: (0 - wf) * (1 / 4)
-                                                      ,_1: -1.2 * (wf / 5)})(strToForm("Front"))
-                              ,$Graphics$Collage.move({ctor: "_Tuple2"
-                                                      ,_0: wf * (1 / 4)
-                                                      ,_1: -1.2 * (wf / 5)})(strToForm("Back"))
                               ,$Graphics$Collage.moveY(wf / 5)(strToForm(g.desc))]));
               }();}
          _U.badCase($moduleName,
