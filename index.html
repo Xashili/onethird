@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html><head><meta charset="UTF-8"><title>Main</title><style>html,head,body { padding:0; margin:0; }
+<html><head><meta charset="UTF-8"><title>1thirD</title><style>html,head,body { padding:0; margin:0; }
 body { font-family: calibri, helvetica, arial, sans-serif; }</style><script type="text/javascript">var Elm = Elm || { Native: {} };Elm.Basics = Elm.Basics || {};
 Elm.Basics.make = function (_elm) {
    "use strict";
@@ -1838,7 +1838,11 @@ Elm.Main.make = function (_elm) {
    t) {
       return function () {
          switch (t.ctor)
-         {case "Lava":
+         {case "Exit":
+            return A2($Color.hsl,
+              $Basics.degrees(60),
+              0.9);
+            case "Lava":
             return A2($Color.hsl,
               $Basics.degrees(0),
               0.8);
@@ -1855,7 +1859,7 @@ Elm.Main.make = function (_elm) {
               $Basics.degrees(200),
               0.7);}
          _U.badCase($moduleName,
-         "between lines 211 and 220");
+         "between lines 258 and 268");
       }();
    });
    var colorAt = F3(function (t,
@@ -1872,26 +1876,26 @@ Elm.Main.make = function (_elm) {
          f.thing)(hue);
       }();
    });
-   var displayDead = F2(function (_v5,
+   var displayDead = F2(function (_v6,
    g) {
       return function () {
-         switch (_v5.ctor)
+         switch (_v6.ctor)
          {case "_Tuple2":
             return $Graphics$Element.color(A3($Color.hsl,
               $Basics.degrees(0),
               0.8,
               0.3))(A3($Graphics$Element.container,
-              _v5._0,
-              _v5._1,
+              _v6._0,
+              _v6._1,
               $Graphics$Element.middle)($Text.centered($Text.color($Color.greyscale(0.2))($Text.height(30)($Text.fromString(A2($Basics._op["++"],
               "You ",
               A2($Basics._op["++"],
               g.killedBy,
               A2($Basics._op["++"],
               "!\n\n",
-              "Spawn by smashing Space, use arrow keys to move")))))))));}
+              "Spawn by smashing space, use arrow keys to move")))))))));}
          _U.badCase($moduleName,
-         "between lines 197 and 200");
+         "between lines 244 and 247");
       }();
    });
    var first = F3(function (f,
@@ -1906,7 +1910,7 @@ Elm.Main.make = function (_elm) {
               xs._1);
             case "[]": return $default;}
          _U.badCase($moduleName,
-         "between lines 169 and 177");
+         "between lines 216 and 224");
       }();
    });
    var doCollide = F2(function (o,
@@ -1931,7 +1935,7 @@ Elm.Main.make = function (_elm) {
             case "Wave":
             return "drowned in water";}
          _U.badCase($moduleName,
-         "between lines 145 and 148");
+         "between lines 192 and 195");
       }();
    };
    var updateLists = function (g) {
@@ -1967,14 +1971,16 @@ Elm.Main.make = function (_elm) {
          g);
       }();
    };
-   var toPos = F3(function (a,
-   l,
-   h) {
-      return function () {
-         var tmp = _U.insert("l",l,a);
-         return _U.insert("h",h,tmp);
-      }();
-   });
+   var Exit = function (a) {
+      return {ctor: "Exit",_0: a};
+   };
+   var exit = function (l) {
+      return {_: {}
+             ,coll: false
+             ,kills: false
+             ,thing: Exit(l)
+             ,vis: true};
+   };
    var Monster = function (a) {
       return {ctor: "Monster"
              ,_0: a};
@@ -1988,11 +1994,11 @@ Elm.Main.make = function (_elm) {
    g,
    po) {
       return function () {
-         var _v17 = po.thing;
-         switch (_v17.ctor)
+         var _v18 = po.thing;
+         switch (_v18.ctor)
          {case "Lava":
             return _U.cmp(A2($Basics._op["%"],
-              $Basics.floor(g.time + _v17._0),
+              $Basics.floor(g.time + _v18._0),
               2000),
               1000) < 0 ? _U.replace([["kills"
                                       ,false]
@@ -2001,26 +2007,32 @@ Elm.Main.make = function (_elm) {
                                ,["vis",true]],
               po);
             case "Monster":
-            return _U.cmp(_v17._0,
+            return _U.cmp(_v18._0,
               0) < 1 ? _U.replace([["vis"
                                    ,false]
                                   ,["kills",false]],
-              po) : _U.cmp(po.h - g.player.h,
-              30) < 0 ? _U.replace([["thing"
-                                    ,Monster(_v17._0 - d)]
-                                   ,["l",po.l - 0.4 * d / 30]
-                                   ,["h",po.h - 0.4 * d / 30]],
-              po) : po;
+              po) : function () {
+                 var moved = _U.cmp(po.h - g.player.h,
+                 30) < 0 ? _U.replace([["thing"
+                                       ,Monster(_v18._0 - d)]
+                                      ,["l",po.l - 0.4 * d / 30]
+                                      ,["h",po.h - 0.4 * d / 30]],
+                 po) : po;
+                 return _U.cmp(po.h - g.player.h,
+                 15) < 0 ? _U.replace([["thing"
+                                       ,Monster(_v18._0 - d)]],
+                 moved) : moved;
+              }();
             case "Wave":
             return _U.cmp(A2($Basics._op["%"],
-              $Basics.floor(g.time + _v17._0),
-              2000),
+              $Basics.floor(g.time + _v18._0),
+              1500),
               100) < 0 ? _U.replace([["l"
-                                     ,_v17._1]
-                                    ,["h",_v17._1 + 2]],
+                                     ,_v18._1]
+                                    ,["h",_v18._1 + 2]],
               po) : _U.replace([["l"
-                                ,po.l + 1.5 * d / 30]
-                               ,["h",po.h + 1.5 * d / 30]],
+                                ,po.l + 1.3 * d / 30]
+                               ,["h",po.h + 1.3 * d / 30]],
               po);}
          return po;
       }();
@@ -2059,54 +2071,48 @@ Elm.Main.make = function (_elm) {
              ,thing: Lava(k)
              ,vis: true};
    };
-   var level1 = {_: {}
-                ,back: _L.fromArray([])
-                ,front: _L.fromArray([A3(toPos,
-                                     lava(500),
-                                     40,
-                                     50)
-                                     ,A3(toPos,wave(100),120,122)
-                                     ,A3(toPos,lava(0),250,260)
-                                     ,A3(toPos,lava(1000),270,280)
-                                     ,A3(toPos,lava(0),290,300)
-                                     ,A3(toPos,monster,360,362)])
-                ,killedBy: "are flat"
-                ,player: {_: {}
-                         ,alive: true
-                         ,h: 5
-                         ,l: 5}
-                ,time: 0};
-   var defaultGame = {_: {}
-                     ,back: _L.fromArray([])
-                     ,front: _L.fromArray([A3(toPos,
-                                          lava(500),
-                                          40,
-                                          50)
-                                          ,A3(toPos,wave(100),120,122)
-                                          ,A3(toPos,lava(0),250,260)
-                                          ,A3(toPos,lava(1000),270,280)
-                                          ,A3(toPos,lava(0),290,300)
-                                          ,A3(toPos,monster,360,362)])
-                     ,killedBy: "are flat"
-                     ,player: {_: {}
-                              ,alive: false
-                              ,h: 5
-                              ,l: 5}
-                     ,time: 0};
    var Wall = {ctor: "Wall"};
    var wall = {_: {}
               ,coll: true
               ,kills: false
               ,thing: Wall
               ,vis: true};
-   var frontWall = A3(toPos,
-   wall,
-   400,
-   401);
+   var Object = F4(function (a,
+   b,
+   c,
+   d) {
+      return {_: {}
+             ,coll: c
+             ,kills: d
+             ,thing: a
+             ,vis: b};
+   });
+   var Player = function (a) {
+      return {_: {},alive: a};
+   };
+   var toPos = F3(function (a,
+   l,
+   h) {
+      return function () {
+         var tmp = _U.insert("l",l,a);
+         return _U.insert("h",h,tmp);
+      }();
+   });
+   var Positioned = F3(function (a,
+   b,
+   c) {
+      return _U.insert("h",
+      b,
+      _U.insert("l",a,c));
+   });
    var backWall = A3(toPos,
    wall,
    0,
    1);
+   var frontWall = A3(toPos,
+   wall,
+   1000,
+   1001);
    var firsts = F2(function (f,g) {
       return {ctor: "_Tuple2"
              ,_0: A3(first,
@@ -2132,13 +2138,13 @@ Elm.Main.make = function (_elm) {
                                  ,false]],
          p);
          return function () {
-            var _v22 = {ctor: "_Tuple2"
+            var _v23 = {ctor: "_Tuple2"
                        ,_0: A2(doCollide,f,p)
                        ,_1: A2(doCollide,b,p)};
-            switch (_v22.ctor)
+            switch (_v23.ctor)
             {case "_Tuple2":
-               switch (_v22._0)
-                 {case false: switch (_v22._1)
+               switch (_v23._0)
+                 {case false: switch (_v23._1)
                       {case false: return g;}
                       break;
                     case true:
@@ -2147,7 +2153,7 @@ Elm.Main.make = function (_elm) {
                                       ,["killedBy"
                                        ,deathCause(f.thing)]],
                       g);}
-                 switch (_v22._1)
+                 switch (_v23._1)
                  {case true:
                     return _U.replace([["player"
                                        ,deadP]
@@ -2156,7 +2162,7 @@ Elm.Main.make = function (_elm) {
                       g);}
                  break;}
             _U.badCase($moduleName,
-            "between lines 137 and 142");
+            "between lines 184 and 189");
          }();
       }();
    };
@@ -2186,20 +2192,10 @@ Elm.Main.make = function (_elm) {
          g);
       }();
    });
-   var stepGame = F2(function (_v25,
+   var displayAlive = F2(function (_v26,
    g) {
       return function () {
-         return $Basics.not(g.player.alive) && _v25.userInput.space ? level1 : checkDeath(updateLists(updateWorld(_v25.timeDelta)(A2(movePlayer,
-         _v25.timeDelta,
-         _v25.userInput)(_U.replace([["time"
-                                     ,g.time + _v25.timeDelta]],
-         g)))));
-      }();
-   });
-   var displayAlive = F2(function (_v27,
-   g) {
-      return function () {
-         switch (_v27.ctor)
+         switch (_v26.ctor)
          {case "_Tuple2":
             return function () {
                  var $ = A2(firsts,
@@ -2210,8 +2206,8 @@ Elm.Main.make = function (_elm) {
                  f = $._0,
                  b = $._1;
                  var half = A2($Graphics$Element.spacer,
-                 _v27._0,
-                 $Basics.floor($Basics.toFloat(_v27._1) / 2) - 50);
+                 _v26._0,
+                 $Basics.floor($Basics.toFloat(_v26._1) / 2) - 50);
                  var p = g.player;
                  var $ = {ctor: "_Tuple2"
                          ,_0: A3(colorAt,g.time,p,f)
@@ -2227,85 +2223,159 @@ Elm.Main.make = function (_elm) {
                               ,{ctor: "_Tuple2"
                                ,_0: 1
                                ,_1: fc}])))(A2($Graphics$Collage.rect,
-                 $Basics.toFloat(_v27._0),
+                 $Basics.toFloat(_v26._0),
                  100));
                  return A2($Graphics$Element.flow,
                  $Graphics$Element.down,
                  _L.fromArray([$Graphics$Element.color(fc)(half)
                               ,A3($Graphics$Collage.collage,
-                              _v27._0,
+                              _v26._0,
                               100,
                               _L.fromArray([middle]))
                               ,$Graphics$Element.color(fb)(half)]));
               }();}
          _U.badCase($moduleName,
-         "between lines 188 and 195");
+         "between lines 235 and 242");
       }();
    });
-   var display = F2(function (_v31,
+   var display = F2(function (_v30,
    g) {
       return function () {
-         switch (_v31.ctor)
+         switch (_v30.ctor)
          {case "_Tuple2":
             return function () {
                  var half = A2($Graphics$Element.spacer,
-                 _v31._0,
-                 $Basics.floor($Basics.toFloat(_v31._1) / 2));
+                 _v30._0,
+                 $Basics.floor($Basics.toFloat(_v30._1) / 2));
                  var p = g.player;
                  return function () {
-                    var _v35 = g.player.alive;
-                    switch (_v35)
+                    var _v34 = g.player.alive;
+                    switch (_v34)
                     {case false:
                        return A2(displayDead,
                          {ctor: "_Tuple2"
-                         ,_0: _v31._0
-                         ,_1: _v31._1},
+                         ,_0: _v30._0
+                         ,_1: _v30._1},
                          g);
                        case true:
                        return A2(displayAlive,
                          {ctor: "_Tuple2"
-                         ,_0: _v31._0
-                         ,_1: _v31._1},
+                         ,_0: _v30._0
+                         ,_1: _v30._1},
                          g);}
                     _U.badCase($moduleName,
-                    "between lines 183 and 186");
+                    "between lines 230 and 233");
                  }();
               }();}
          _U.badCase($moduleName,
-         "between lines 181 and 186");
+         "between lines 228 and 233");
       }();
    });
-   var Object = F4(function (a,
-   b,
-   c,
-   d) {
+   var level2 = {_: {}
+                ,back: _L.fromArray([])
+                ,front: _L.fromArray([A3(toPos,
+                                     lava(0),
+                                     40,
+                                     50)
+                                     ,A3(toPos,lava(1000),70,80)
+                                     ,A3(toPos,monster,140,141)
+                                     ,A3(toPos,monster,180,181)
+                                     ,A3(toPos,wall,200,201)])};
+   var level1 = {_: {}
+                ,back: _L.fromArray([])
+                ,front: _L.fromArray([A3(toPos,
+                                     lava(0),
+                                     60,
+                                     70)
+                                     ,A3(toPos,wave(120),120,122)
+                                     ,A3(toPos,lava(0),250,260)
+                                     ,A3(toPos,
+                                     exit(level2),
+                                     300,
+                                     301)])};
+   var Level = F2(function (a,b) {
       return {_: {}
-             ,coll: c
-             ,kills: d
-             ,thing: a
-             ,vis: b};
+             ,back: b
+             ,front: a};
    });
-   var Player = function (a) {
-      return {_: {},alive: a};
+   var defaultGame = {_: {}
+                     ,back: _L.fromArray([])
+                     ,front: _L.fromArray([])
+                     ,killedBy: "are flat"
+                     ,player: {_: {}
+                              ,alive: false
+                              ,h: 15
+                              ,l: 15}
+                     ,resetTo: level1
+                     ,time: 0};
+   var reset = function (level) {
+      return function () {
+         var $ = level,
+         front = $.front,
+         back = $.back;
+         return _U.replace([["front"
+                            ,front]
+                           ,["back",back]
+                           ,["resetTo",level]
+                           ,["player"
+                            ,{_: {}
+                             ,alive: true
+                             ,h: 15
+                             ,l: 15}]],
+         defaultGame);
+      }();
    };
-   var Positioned = F3(function (a,
-   b,
-   c) {
-      return _U.insert("h",
-      b,
-      _U.insert("l",a,c));
+   var checkWin = function (g) {
+      return function () {
+         var isExit = function (o) {
+            return function () {
+               var _v35 = o.thing;
+               switch (_v35.ctor)
+               {case "Exit": return true;}
+               return false;
+            }();
+         };
+         var _ = A2(firsts,isExit,g);
+         var exit = function () {
+            switch (_.ctor)
+            {case "_Tuple2": return _._0;}
+            _U.badCase($moduleName,
+            "on line 171, column 21 to 36");
+         }();
+         var next = function () {
+            var _v40 = exit.thing;
+            switch (_v40.ctor)
+            {case "Exit": return _v40._0;}
+            return level1;
+         }();
+         return A2(doCollide,
+         exit,
+         g.player) ? reset(next) : g;
+      }();
+   };
+   var stepGame = F2(function (_v42,
+   g) {
+      return function () {
+         return $Basics.not(g.player.alive) && _v42.userInput.space ? reset(g.resetTo) : checkWin(checkDeath(updateLists(updateWorld(_v42.timeDelta)(A2(movePlayer,
+         _v42.timeDelta,
+         _v42.userInput)(_U.replace([["time"
+                                     ,g.time + _v42.timeDelta]],
+         g))))));
+      }();
    });
-   var GameState = F5(function (a,
+   var GameState = F6(function (a,
    b,
    c,
    d,
-   e) {
+   e,
+   f) {
       return {_: {}
-             ,back: c
-             ,front: b
-             ,killedBy: e
-             ,player: a
-             ,time: d};
+             ,back: e
+             ,front: d
+             ,killedBy: b
+             ,player: c
+             ,resetTo: a
+             ,time: f};
    });
    var Input = F2(function (a,b) {
       return {_: {}
@@ -2313,14 +2383,17 @@ Elm.Main.make = function (_elm) {
              ,userInput: b};
    });
    var userInput = function () {
-      var f = F2(function (r,s) {
+      var f = F3(function (w,a,s) {
          return {_: {}
                 ,space: s
-                ,x: $Basics.toFloat(r.y)};
+                ,x: _U.eq(w.y,
+                0) ? $Basics.toFloat(a.y) : $Basics.toFloat(w.y)};
       });
       return A2($Signal._op["~"],
+      A2($Signal._op["~"],
       A2($Signal._op["<~"],
       f,
+      $Keyboard.wasd),
       $Keyboard.arrows),
       $Keyboard.space);
    }();
@@ -2347,26 +2420,32 @@ Elm.Main.make = function (_elm) {
                       ,userInput: userInput
                       ,Input: Input
                       ,GameState: GameState
+                      ,defaultGame: defaultGame
+                      ,Level: Level
+                      ,level1: level1
+                      ,level2: level2
+                      ,frontWall: frontWall
+                      ,backWall: backWall
                       ,Positioned: Positioned
+                      ,toPos: toPos
                       ,Player: Player
                       ,Object: Object
                       ,Wall: Wall
                       ,Lava: Lava
                       ,Wave: Wave
                       ,Monster: Monster
-                      ,level1: level1
-                      ,defaultGame: defaultGame
+                      ,Exit: Exit
                       ,monster: monster
                       ,wall: wall
                       ,lava: lava
                       ,wave: wave
-                      ,toPos: toPos
-                      ,frontWall: frontWall
-                      ,backWall: backWall
+                      ,exit: exit
                       ,stepGame: stepGame
+                      ,reset: reset
                       ,updateLists: updateLists
                       ,updateWorld: updateWorld
                       ,update: update
+                      ,checkWin: checkWin
                       ,checkDeath: checkDeath
                       ,deathCause: deathCause
                       ,movePlayer: movePlayer
