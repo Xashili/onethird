@@ -1841,14 +1841,14 @@ Elm.Main.make = function (_elm) {
             return A2($Color.hsl,
               $Basics.degrees(0),
               0.9);
-            case "Lava":
-            return A2($Color.hsl,
-              $Basics.degrees(0),
-              0);
             case "Monster":
             return A2($Color.hsl,
               $Basics.degrees(120),
               t._0 / 3000);
+            case "Stomper":
+            return A2($Color.hsl,
+              $Basics.degrees(0),
+              0);
             case "Wall":
             return A2($Color.hsl,
               $Basics.degrees(0),
@@ -1858,23 +1858,9 @@ Elm.Main.make = function (_elm) {
               $Basics.degrees(200),
               0.7);}
          _U.badCase($moduleName,
-         "between lines 248 and 258");
+         "between lines 227 and 232");
       }();
    };
-   var hue = F2(function (p,o) {
-      return function () {
-         var dist = A2($Basics.min,
-         $Basics.abs(o.l - p.h),
-         $Basics.abs(p.l - o.h));
-         var hue = Math.pow(A2($Basics.min,
-         1,
-         dist / 80) - 1,
-         4);
-         return A2($Basics.max,
-         0.0,
-         hue / 2);
-      }();
-   });
    var first = F3(function (f,
    $default,
    xs) {
@@ -1887,64 +1873,19 @@ Elm.Main.make = function (_elm) {
               xs._1);
             case "[]": return $default;}
          _U.badCase($moduleName,
-         "between lines 215 and 223");
+         "between lines 199 and 201");
       }();
-   });
-   var doCollide = F2(function (o,
-   p) {
-      return _U.cmp(o.l,
-      p.l) > -1 && _U.cmp(o.l,
-      p.h) < 1 || (_U.cmp(o.h,
-      p.l) > -1 && _U.cmp(o.h,
-      p.h) < 1 || (_U.cmp(o.h,
-      p.l) > -1 && _U.cmp(o.l,
-      p.l) < 1 || _U.cmp(o.l,
-      p.h) > -1 && _U.cmp(o.h,
-      p.h) < 1));
    });
    var deathCause = function (t) {
       return function () {
          switch (t.ctor)
-         {case "Lava":
-            return "You got killed\nby a stomper";
-            case "Monster":
+         {case "Monster":
             return "A goblin\nhit you";
+            case "Stomper":
+            return "You got killed\nby a stomper";
             case "Wave":
-            return "You drowned\nin water";}
+            return "Water flushed\nyou to death";}
          return "WTF?";
-      }();
-   };
-   var updateLists = function (g) {
-      return function () {
-         var $ = A2($List.partition,
-         function (o) {
-            return _U.cmp(o.l,
-            g.player.l) > 0;
-         },
-         g.back),
-         newF = $._0,
-         b = $._1;
-         var $ = A2($List.partition,
-         function (o) {
-            return _U.cmp(o.h,
-            g.player.h) < 0;
-         },
-         g.front),
-         newB = $._0,
-         f = $._1;
-         return _U.replace([["front"
-                            ,A2($List.sortBy,
-                            function (_) {
-                               return _.l;
-                            },
-                            A2($Basics._op["++"],newF,f))]
-                           ,["back"
-                            ,A2($List.sortBy,
-                            function (o) {
-                               return 1000 - o.h;
-                            },
-                            A2($Basics._op["++"],newB,b))]],
-         g);
       }();
    };
    var reset = function (g) {
@@ -1957,7 +1898,7 @@ Elm.Main.make = function (_elm) {
                             ,front]
                            ,["back",back]
                            ,["desc",desc]
-                           ,["player",{_: {},h: 5,l: 5}]],
+                           ,["player",{_: {},h: 1,l: 5}]],
          g);
       }();
    };
@@ -1980,65 +1921,6 @@ Elm.Main.make = function (_elm) {
                  ,kills: true
                  ,thing: Monster(3000)
                  ,vis: true};
-   var update = F3(function (d,
-   g,
-   po) {
-      return function () {
-         var _v14 = po.thing;
-         switch (_v14.ctor)
-         {case "Lava":
-            return _U.cmp(A2($Basics._op["%"],
-              $Basics.floor(g.time + _v14._0),
-              3000),
-              1000) < 0 ? _U.replace([["kills"
-                                      ,false]
-                                     ,["vis",false]],
-              po) : _U.replace([["kills",true]
-                               ,["vis",true]],
-              po);
-            case "Monster":
-            return _U.cmp(_v14._0,
-              0) < 1 ? _U.replace([["vis"
-                                   ,false]
-                                  ,["kills",false]],
-              po) : function () {
-                 var moved = _U.cmp(po.h - g.player.h,
-                 40) < 0 ? _U.replace([["thing"
-                                       ,Monster(_v14._0)]
-                                      ,["l",po.l - 0.4 * d / 30]
-                                      ,["h",po.h - 0.4 * d / 30]],
-                 po) : po;
-                 return _U.cmp(po.h - g.player.h,
-                 30) < 0 ? _U.replace([["thing"
-                                       ,Monster(_v14._0 - d)]],
-                 moved) : moved;
-              }();
-            case "Wave":
-            return _U.cmp(A2($Basics._op["%"],
-              $Basics.floor(g.time + _v14._0),
-              1500),
-              100) < 0 ? _U.replace([["l"
-                                     ,_v14._1]
-                                    ,["h",_v14._1 + 2]],
-              po) : _U.replace([["l"
-                                ,po.l + 1.3 * d / 30]
-                               ,["h",po.h + 1.3 * d / 30]],
-              po);}
-         return po;
-      }();
-   });
-   var updateWorld = F2(function (delta,
-   g) {
-      return _U.replace([["front"
-                         ,A2($List.map,
-                         A2(update,delta,g),
-                         g.front)]
-                        ,["back"
-                         ,A2($List.map,
-                         A2(update,delta,g),
-                         g.back)]],
-      g);
-   });
    var Wave = F2(function (a,b) {
       return {ctor: "Wave"
              ,_0: a
@@ -2051,14 +1933,15 @@ Elm.Main.make = function (_elm) {
              ,thing: A2(Wave,0,o)
              ,vis: true};
    };
-   var Lava = function (a) {
-      return {ctor: "Lava",_0: a};
+   var Stomper = function (a) {
+      return {ctor: "Stomper"
+             ,_0: a};
    };
-   var lava = function (k) {
+   var stomper = function (k) {
       return {_: {}
-             ,coll: false
+             ,coll: true
              ,kills: true
-             ,thing: Lava(k)
+             ,thing: Stomper(k)
              ,vis: true};
    };
    var Wall = {ctor: "Wall"};
@@ -2078,6 +1961,115 @@ Elm.Main.make = function (_elm) {
              ,vis: b};
    });
    var Player = {_: {}};
+   var h = function (o) {
+      return o.l + o.h;
+   };
+   var sortLists = function (g) {
+      return function () {
+         var $ = A2($List.partition,
+         function (o) {
+            return _U.cmp(o.l,
+            g.player.l) > 0;
+         },
+         g.back),
+         newF = $._0,
+         b = $._1;
+         var $ = A2($List.partition,
+         function (o) {
+            return _U.cmp(h(o),
+            h(g.player)) < 0;
+         },
+         g.front),
+         newB = $._0,
+         f = $._1;
+         return _U.replace([["front"
+                            ,A2($List.sortBy,
+                            function (_) {
+                               return _.l;
+                            },
+                            A2($Basics._op["++"],newF,f))]
+                           ,["back"
+                            ,A2($List.sortBy,
+                            function (o) {
+                               return 1000 - h(o);
+                            },
+                            A2($Basics._op["++"],newB,b))]],
+         g);
+      }();
+   };
+   var doCollide = F2(function (o,
+   p) {
+      return _U.cmp(o.l,
+      p.l) > -1 && _U.cmp(o.l,
+      h(p)) < 1 || (_U.cmp(h(o),
+      p.l) > -1 && _U.cmp(h(o),
+      h(p)) < 1 || (_U.cmp(h(o),
+      p.l) > -1 && _U.cmp(o.l,
+      p.l) < 1 || _U.cmp(o.l,
+      h(o)) > -1 && _U.cmp(h(o),
+      h(p)) < 1));
+   });
+   var dist = F2(function (x,y) {
+      return $List.minimum(_L.fromArray([$Basics.abs(h(x) - h(y))
+                                        ,$Basics.abs(h(x) - y.l)
+                                        ,$Basics.abs(x.l - h(y))
+                                        ,$Basics.abs(x.l - y.l)]));
+   });
+   var update = F3(function (d,
+   g,
+   po) {
+      return function () {
+         var _v14 = po.thing;
+         switch (_v14.ctor)
+         {case "Monster":
+            return _U.cmp(A2(dist,
+              po,
+              g.player),
+              40) < 0 ? _U.replace([["thing"
+                                    ,Monster(_U.cmp(A2(dist,
+                                    po,
+                                    g.player),
+                                    30) < 0 ? _v14._0 - d : _v14._0)]
+                                   ,["l",po.l - 0.4 * d / 30]
+                                   ,["vis",_U.cmp(_v14._0,0) > 0]
+                                   ,["kills"
+                                    ,_U.cmp(_v14._0,0) > 0]],
+              po) : po;
+            case "Stomper":
+            return _U.cmp(A2($Basics._op["%"],
+              $Basics.floor(g.time + _v14._0),
+              3000),
+              1000) < 0 ? _U.replace([["kills"
+                                      ,false]
+                                     ,["vis",false]
+                                     ,["coll",false]],
+              po) : _U.replace([["kills",true]
+                               ,["vis",true]
+                               ,["coll",true]],
+              po);
+            case "Wave":
+            return _U.cmp(A2($Basics._op["%"],
+              $Basics.floor(g.time + _v14._0),
+              1000),
+              100) < 0 ? _U.replace([["l"
+                                     ,_v14._1]],
+              po) : _U.replace([["l"
+                                ,po.l + 1.3 * d / 30]],
+              po);}
+         return po;
+      }();
+   });
+   var hue = F2(function (p,o) {
+      return function () {
+         var hue = Math.pow(A2($Basics.min,
+         1,
+         A2(dist,p,o) / 80) - 1,
+         4);
+         return A2($Basics.max,
+         0.0,
+         hue / 2);
+      }();
+   });
    var toPos = F3(function (a,
    l,
    h) {
@@ -2100,7 +2092,7 @@ Elm.Main.make = function (_elm) {
    var frontWall = A3(toPos,
    wall,
    1000,
-   1003);
+   3);
    var firsts = F2(function (f,g) {
       return {ctor: "_Tuple2"
              ,_0: A3(first,
@@ -2133,17 +2125,17 @@ Elm.Main.make = function (_elm) {
                       {case false: return g;}
                       break;
                     case true:
-                    return reset(_U.replace([["killedBy"
+                    return reset(_U.replace([["info"
                                              ,deathCause(f.thing)]],
                       g));}
                  switch (_v19._1)
                  {case true:
-                    return reset(_U.replace([["killedBy"
+                    return reset(_U.replace([["info"
                                              ,deathCause(b.thing)]],
                       g));}
                  break;}
             _U.badCase($moduleName,
-            "between lines 184 and 187");
+            "between lines 164 and 167");
          }();
       }();
    };
@@ -2160,17 +2152,13 @@ Elm.Main.make = function (_elm) {
          b = $._1;
          var p = g.player;
          var $new = _U.replace([["l"
-                                ,p.l + userInput.x * d / 30]
-                               ,["h"
-                                ,p.l + 1 + userInput.x * d / 30]],
+                                ,p.l + userInput.x * d / 30]],
          p);
          return A2(doCollide,
          f,
          $new) || A2(doCollide,
          b,
-         $new) ? g : _U.replace([["player"
-                                 ,$new]],
-         g);
+         $new) ? p : $new;
       }();
    });
    var display = F2(function (_v22,
@@ -2201,7 +2189,7 @@ Elm.Main.make = function (_elm) {
                        {case "_Tuple2":
                           return $Graphics$Collage.filled(colF(_v26._1))($Graphics$Collage.circle(_v26._0 * (wf / 5)));}
                        _U.badCase($moduleName,
-                       "on line 230, column 33 to 76");
+                       "on line 210, column 33 to 76");
                     }();
                  });
                  var p = g.player;
@@ -2213,7 +2201,6 @@ Elm.Main.make = function (_elm) {
                  return A3($Graphics$Collage.collage,
                  _v22._0,
                  _v22._1,
-                 A2($Basics._op["++"],
                  _L.fromArray([$Graphics$Collage.filled($Color.black)(A2($Graphics$Collage.rect,
                               wf,
                               hf))
@@ -2239,38 +2226,37 @@ Elm.Main.make = function (_elm) {
                                                                                                                                          ,{ctor: "_Tuple2"
                                                                                                                                           ,_0: 1
                                                                                                                                           ,_1: bh}]))))
-                              ,$Graphics$Collage.moveY(wf / 5)(strToForm(g.desc))]),
-                 _U.cmp(p.h,
-                 40) < 0 ? _L.fromArray([$Graphics$Collage.moveY((0 - wf) / 5)(strToForm(g.killedBy))]) : _L.fromArray([])));
+                              ,$Graphics$Collage.moveY(wf / 4)(strToForm(g.desc))
+                              ,$Graphics$Collage.moveY((0 - wf) / 5)(strToForm(g.info))]));
               }();}
          _U.badCase($moduleName,
-         "between lines 226 and 239");
+         "between lines 206 and 219");
       }();
    });
    var level2 = {_: {}
                 ,back: _L.fromArray([])
                 ,desc: "Level 2\nKeep distance"
                 ,front: _L.fromArray([A3(toPos,
-                                     lava(0),
+                                     stomper(0),
                                      40,
-                                     50)
-                                     ,A3(toPos,lava(1000),70,80)
-                                     ,A3(toPos,monster,160,162)
-                                     ,A3(toPos,monster,180,182)
-                                     ,A3(toPos,wall,200,230)])};
+                                     10)
+                                     ,A3(toPos,stomper(2500),70,10)
+                                     ,A3(toPos,monster,160,2)
+                                     ,A3(toPos,monster,180,2)
+                                     ,A3(toPos,wall,200,3)])};
    var level1 = {_: {}
                 ,back: _L.fromArray([])
-                ,desc: "Level 1\nExplore!"
+                ,desc: "Ascend the depth of\nline Nevermore"
                 ,front: _L.fromArray([A3(toPos,
-                                     lava(0),
+                                     stomper(0),
                                      60,
-                                     65)
-                                     ,A3(toPos,wave(120),120,122)
-                                     ,A3(toPos,lava(0),250,260)
+                                     10)
+                                     ,A3(toPos,wave(120),120,2)
+                                     ,A3(toPos,stomper(0),250,10)
                                      ,A3(toPos,
                                      exit(level2),
                                      300,
-                                     330)])};
+                                     10)])};
    var checkWin = function (g) {
       return function () {
          var isExit = function (o) {
@@ -2286,7 +2272,7 @@ Elm.Main.make = function (_elm) {
             switch (_.ctor)
             {case "_Tuple2": return _._0;}
             _U.badCase($moduleName,
-            "on line 171, column 21 to 36");
+            "on line 151, column 21 to 36");
          }();
          var next = function () {
             var _v35 = exit.thing;
@@ -2298,18 +2284,36 @@ Elm.Main.make = function (_elm) {
          exit,
          g.player) ? reset(_U.replace([["resetTo"
                                        ,next]
-                                      ,["killedBy","Checkpoint!"]],
+                                      ,["info","Checkpoint!"]],
          g)) : g;
       }();
    };
    var stepGame = F2(function (_v37,
    g) {
       return function () {
-         return checkWin(checkDeath(updateLists(updateWorld(_v37.timeDelta)(A2(movePlayer,
-         _v37.timeDelta,
-         _v37.userInput)(_U.replace([["time"
-                                     ,g.time + _v37.timeDelta]],
-         g))))));
+         return checkWin(checkDeath(sortLists(_U.replace([["time"
+                                                          ,g.time + _v37.timeDelta]
+                                                         ,["info"
+                                                          ,_U.cmp(g.player.l,
+                                                          30) > 0 ? "" : g.info]
+                                                         ,["player"
+                                                          ,A3(movePlayer,
+                                                          _v37.timeDelta,
+                                                          _v37.userInput,
+                                                          g)]
+                                                         ,["front"
+                                                          ,A2($List.map,
+                                                          A2(update,
+                                                          _v37.timeDelta,
+                                                          g),
+                                                          g.front)]
+                                                         ,["back"
+                                                          ,A2($List.map,
+                                                          A2(update,
+                                                          _v37.timeDelta,
+                                                          g),
+                                                          g.back)]],
+         g))));
       }();
    });
    var Level = F3(function (a,
@@ -2324,7 +2328,7 @@ Elm.Main.make = function (_elm) {
                            ,back: _L.fromArray([])
                            ,desc: ""
                            ,front: _L.fromArray([])
-                           ,killedBy: "Move with\narrow keys"
+                           ,info: "Move with\narrow keys"
                            ,player: {_: {},h: 5,l: 5}
                            ,resetTo: level1
                            ,time: 0});
@@ -2339,7 +2343,7 @@ Elm.Main.make = function (_elm) {
              ,back: e
              ,desc: g
              ,front: d
-             ,killedBy: b
+             ,info: b
              ,player: c
              ,resetTo: a
              ,time: f};
@@ -2392,28 +2396,29 @@ Elm.Main.make = function (_elm) {
                       ,backWall: backWall
                       ,Positioned: Positioned
                       ,toPos: toPos
+                      ,h: h
                       ,Player: Player
                       ,Object: Object
                       ,Wall: Wall
-                      ,Lava: Lava
+                      ,Stomper: Stomper
                       ,Wave: Wave
                       ,Monster: Monster
                       ,Exit: Exit
                       ,monster: monster
                       ,wall: wall
-                      ,lava: lava
+                      ,stomper: stomper
                       ,wave: wave
                       ,exit: exit
                       ,stepGame: stepGame
                       ,reset: reset
-                      ,updateLists: updateLists
-                      ,updateWorld: updateWorld
+                      ,sortLists: sortLists
                       ,update: update
                       ,checkWin: checkWin
                       ,checkDeath: checkDeath
                       ,deathCause: deathCause
                       ,movePlayer: movePlayer
                       ,doCollide: doCollide
+                      ,dist: dist
                       ,firsts: firsts
                       ,first: first
                       ,display: display
