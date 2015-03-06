@@ -1834,68 +1834,45 @@ Elm.Main.make = function (_elm) {
    $Time = Elm.Time.make(_elm),
    $Window = Elm.Window.make(_elm);
    var delta = $Time.fps(20);
-   var colorFrom = F2(function (d,
-   t) {
+   var colorFrom = function (t) {
       return function () {
          switch (t.ctor)
          {case "Exit":
             return A2($Color.hsl,
-              $Basics.degrees(30),
+              $Basics.degrees(0),
               0.9);
             case "Lava":
             return A2($Color.hsl,
               $Basics.degrees(0),
-              0.8);
+              0);
             case "Monster":
             return A2($Color.hsl,
               $Basics.degrees(120),
               t._0 / 3000);
             case "Wall":
             return A2($Color.hsl,
-              $Basics.degrees(30),
+              $Basics.degrees(0),
               0.9);
             case "Wave":
             return A2($Color.hsl,
               $Basics.degrees(200),
               0.7);}
          _U.badCase($moduleName,
-         "between lines 278 and 288");
+         "between lines 248 and 258");
       }();
-   });
-   var colorAt = F3(function (t,
-   p,
-   f) {
+   };
+   var hue = F2(function (p,o) {
       return function () {
-         var hue = A2($Basics.max,
+         var dist = A2($Basics.min,
+         $Basics.abs(o.l - p.h),
+         $Basics.abs(p.l - o.h));
+         var hue = Math.pow(A2($Basics.min,
+         1,
+         dist / 80) - 1,
+         4);
+         return A2($Basics.max,
          0.0,
-         A2($Basics.min,
-         0.5,
-         2 / $Basics.abs(f.l - p.l)));
-         return A2(colorFrom,
-         t,
-         f.thing)(hue);
-      }();
-   });
-   var displayDead = F2(function (_v6,
-   g) {
-      return function () {
-         switch (_v6.ctor)
-         {case "_Tuple2":
-            return $Graphics$Element.color(A3($Color.hsl,
-              $Basics.degrees(0),
-              0.8,
-              0.3))(A3($Graphics$Element.container,
-              _v6._0,
-              _v6._1,
-              $Graphics$Element.middle)($Text.centered($Text.color($Color.greyscale(0.2))($Text.height(30)($Text.fromString(A2($Basics._op["++"],
-              "You ",
-              A2($Basics._op["++"],
-              g.killedBy,
-              A2($Basics._op["++"],
-              "!\n\n",
-              "Spawn by smashing space, use arrow keys to move")))))))));}
-         _U.badCase($moduleName,
-         "between lines 264 and 267");
+         hue / 2);
       }();
    });
    var first = F3(function (f,
@@ -1910,7 +1887,7 @@ Elm.Main.make = function (_elm) {
               xs._1);
             case "[]": return $default;}
          _U.badCase($moduleName,
-         "between lines 223 and 231");
+         "between lines 215 and 223");
       }();
    });
    var doCollide = F2(function (o,
@@ -1929,13 +1906,12 @@ Elm.Main.make = function (_elm) {
       return function () {
          switch (t.ctor)
          {case "Lava":
-            return "tried to swim in lava";
+            return "You got killed\nby a stomper";
             case "Monster":
-            return "got hit by a goblin";
+            return "A goblin\nhit you";
             case "Wave":
-            return "drowned in water";}
-         _U.badCase($moduleName,
-         "between lines 199 and 202");
+            return "You drowned\nin water";}
+         return "WTF?";
       }();
    };
    var updateLists = function (g) {
@@ -1971,6 +1947,20 @@ Elm.Main.make = function (_elm) {
          g);
       }();
    };
+   var reset = function (g) {
+      return function () {
+         var $ = g.resetTo,
+         front = $.front,
+         back = $.back,
+         desc = $.desc;
+         return _U.replace([["front"
+                            ,front]
+                           ,["back",back]
+                           ,["desc",desc]
+                           ,["player",{_: {},h: 5,l: 5}]],
+         g);
+      }();
+   };
    var Exit = function (a) {
       return {ctor: "Exit",_0: a};
    };
@@ -1994,12 +1984,12 @@ Elm.Main.make = function (_elm) {
    g,
    po) {
       return function () {
-         var _v18 = po.thing;
-         switch (_v18.ctor)
+         var _v14 = po.thing;
+         switch (_v14.ctor)
          {case "Lava":
             return _U.cmp(A2($Basics._op["%"],
-              $Basics.floor(g.time + _v18._0),
-              2000),
+              $Basics.floor(g.time + _v14._0),
+              3000),
               1000) < 0 ? _U.replace([["kills"
                                       ,false]
                                      ,["vis",false]],
@@ -2007,29 +1997,29 @@ Elm.Main.make = function (_elm) {
                                ,["vis",true]],
               po);
             case "Monster":
-            return _U.cmp(_v18._0,
+            return _U.cmp(_v14._0,
               0) < 1 ? _U.replace([["vis"
                                    ,false]
                                   ,["kills",false]],
               po) : function () {
                  var moved = _U.cmp(po.h - g.player.h,
-                 30) < 0 ? _U.replace([["thing"
-                                       ,Monster(_v18._0 - d)]
+                 40) < 0 ? _U.replace([["thing"
+                                       ,Monster(_v14._0)]
                                       ,["l",po.l - 0.4 * d / 30]
                                       ,["h",po.h - 0.4 * d / 30]],
                  po) : po;
                  return _U.cmp(po.h - g.player.h,
-                 15) < 0 ? _U.replace([["thing"
-                                       ,Monster(_v18._0 - d)]],
+                 30) < 0 ? _U.replace([["thing"
+                                       ,Monster(_v14._0 - d)]],
                  moved) : moved;
               }();
             case "Wave":
             return _U.cmp(A2($Basics._op["%"],
-              $Basics.floor(g.time + _v18._0),
+              $Basics.floor(g.time + _v14._0),
               1500),
               100) < 0 ? _U.replace([["l"
-                                     ,_v18._1]
-                                    ,["h",_v18._1 + 2]],
+                                     ,_v14._1]
+                                    ,["h",_v14._1 + 2]],
               po) : _U.replace([["l"
                                 ,po.l + 1.3 * d / 30]
                                ,["h",po.h + 1.3 * d / 30]],
@@ -2087,9 +2077,7 @@ Elm.Main.make = function (_elm) {
              ,thing: a
              ,vis: b};
    });
-   var Player = function (a) {
-      return {_: {},alive: a};
-   };
+   var Player = {_: {}};
    var toPos = F3(function (a,
    l,
    h) {
@@ -2134,35 +2122,28 @@ Elm.Main.make = function (_elm) {
          f = $._0,
          b = $._1;
          var p = g.player;
-         var deadP = _U.replace([["alive"
-                                 ,false]],
-         p);
          return function () {
-            var _v23 = {ctor: "_Tuple2"
+            var _v19 = {ctor: "_Tuple2"
                        ,_0: A2(doCollide,f,p)
                        ,_1: A2(doCollide,b,p)};
-            switch (_v23.ctor)
+            switch (_v19.ctor)
             {case "_Tuple2":
-               switch (_v23._0)
-                 {case false: switch (_v23._1)
+               switch (_v19._0)
+                 {case false: switch (_v19._1)
                       {case false: return g;}
                       break;
                     case true:
-                    return _U.replace([["player"
-                                       ,deadP]
-                                      ,["killedBy"
-                                       ,deathCause(f.thing)]],
-                      g);}
-                 switch (_v23._1)
+                    return reset(_U.replace([["killedBy"
+                                             ,deathCause(f.thing)]],
+                      g));}
+                 switch (_v19._1)
                  {case true:
-                    return _U.replace([["player"
-                                       ,deadP]
-                                      ,["killedBy"
-                                       ,deathCause(b.thing)]],
-                      g);}
+                    return reset(_U.replace([["killedBy"
+                                             ,deathCause(b.thing)]],
+                      g));}
                  break;}
             _U.badCase($moduleName,
-            "between lines 191 and 196");
+            "between lines 184 and 187");
          }();
       }();
    };
@@ -2192,14 +2173,14 @@ Elm.Main.make = function (_elm) {
          g);
       }();
    });
-   var displayAlive = F2(function (_v26,
+   var display = F2(function (_v22,
    g) {
       return function () {
-         switch (_v26.ctor)
+         switch (_v22.ctor)
          {case "_Tuple2":
             return function () {
-                 var strToForm = function (s) {
-                    return $Graphics$Collage.toForm($Text.centered($Text.height(28)($Text.fromString(s))));
+                 var strToForm = function ($) {
+                    return $Graphics$Collage.toForm($Text.centered($Text.color($Color.white)($Text.height(28)($Text.fromString($)))));
                  };
                  var $ = A2(firsts,
                  function (_) {
@@ -2209,63 +2190,61 @@ Elm.Main.make = function (_elm) {
                  f = $._0,
                  b = $._1;
                  var $ = {ctor: "_Tuple2"
-                         ,_0: $Basics.toFloat(_v26._0)
-                         ,_1: $Basics.toFloat(_v26._1)},
+                         ,_0: $Basics.toFloat(_v22._0)
+                         ,_1: $Basics.toFloat(_v22._1)},
                  wf = $._0,
                  hf = $._1;
-                 var c = $Graphics$Collage.circle(wf / 5);
+                 var toEye = F2(function (colF,
+                 _v26) {
+                    return function () {
+                       switch (_v26.ctor)
+                       {case "_Tuple2":
+                          return $Graphics$Collage.filled(colF(_v26._1))($Graphics$Collage.circle(_v26._0 * (wf / 5)));}
+                       _U.badCase($moduleName,
+                       "on line 230, column 33 to 76");
+                    }();
+                 });
                  var p = g.player;
                  var $ = {ctor: "_Tuple2"
-                         ,_0: A3(colorAt,g.time,p,f)
-                         ,_1: A3(colorAt,g.time,p,b)},
-                 fc = $._0,
-                 bc = $._1;
+                         ,_0: A2(hue,p,f)
+                         ,_1: A2(hue,p,b)},
+                 fh = $._0,
+                 bh = $._1;
                  return A3($Graphics$Collage.collage,
-                 _v26._0,
-                 _v26._1,
-                 _L.fromArray([$Graphics$Collage.move({ctor: "_Tuple2"
-                                                      ,_0: (0 - wf) * (1 / 4)
-                                                      ,_1: 0})($Graphics$Collage.filled(fc)(c))
+                 _v22._0,
+                 _v22._1,
+                 A2($Basics._op["++"],
+                 _L.fromArray([$Graphics$Collage.filled($Color.black)(A2($Graphics$Collage.rect,
+                              wf,
+                              hf))
                               ,$Graphics$Collage.move({ctor: "_Tuple2"
                                                       ,_0: wf * (1 / 4)
-                                                      ,_1: 0})($Graphics$Collage.filled(bc)(c))
-                              ,$Graphics$Collage.moveY(wf / 5)(strToForm(g.desc))]));
+                                                      ,_1: 0})($Graphics$Collage.group($List.map(toEye(colorFrom(f.thing)))(_L.fromArray([{ctor: "_Tuple2"
+                                                                                                                                          ,_0: 1.2
+                                                                                                                                          ,_1: fh / 4}
+                                                                                                                                         ,{ctor: "_Tuple2"
+                                                                                                                                          ,_0: 1.1
+                                                                                                                                          ,_1: fh / 2}
+                                                                                                                                         ,{ctor: "_Tuple2"
+                                                                                                                                          ,_0: 1
+                                                                                                                                          ,_1: fh}]))))
+                              ,$Graphics$Collage.move({ctor: "_Tuple2"
+                                                      ,_0: (0 - wf) * (1 / 4)
+                                                      ,_1: 0})($Graphics$Collage.group($List.map(toEye(colorFrom(b.thing)))(_L.fromArray([{ctor: "_Tuple2"
+                                                                                                                                          ,_0: 1.2
+                                                                                                                                          ,_1: bh / 4}
+                                                                                                                                         ,{ctor: "_Tuple2"
+                                                                                                                                          ,_0: 1.1
+                                                                                                                                          ,_1: bh / 2}
+                                                                                                                                         ,{ctor: "_Tuple2"
+                                                                                                                                          ,_0: 1
+                                                                                                                                          ,_1: bh}]))))
+                              ,$Graphics$Collage.moveY(wf / 5)(strToForm(g.desc))]),
+                 _U.cmp(p.h,
+                 40) < 0 ? _L.fromArray([$Graphics$Collage.moveY((0 - wf) / 5)(strToForm(g.killedBy))]) : _L.fromArray([])));
               }();}
          _U.badCase($moduleName,
-         "between lines 252 and 262");
-      }();
-   });
-   var display = F2(function (_v30,
-   g) {
-      return function () {
-         switch (_v30.ctor)
-         {case "_Tuple2":
-            return function () {
-                 var half = A2($Graphics$Element.spacer,
-                 _v30._0,
-                 $Basics.floor($Basics.toFloat(_v30._1) / 2));
-                 var p = g.player;
-                 return function () {
-                    var _v34 = g.player.alive;
-                    switch (_v34)
-                    {case false:
-                       return A2(displayDead,
-                         {ctor: "_Tuple2"
-                         ,_0: _v30._0
-                         ,_1: _v30._1},
-                         g);
-                       case true:
-                       return A2(displayAlive,
-                         {ctor: "_Tuple2"
-                         ,_0: _v30._0
-                         ,_1: _v30._1},
-                         g);}
-                    _U.badCase($moduleName,
-                    "between lines 237 and 249");
-                 }();
-              }();}
-         _U.badCase($moduleName,
-         "between lines 235 and 249");
+         "between lines 226 and 239");
       }();
    });
    var level2 = {_: {}
@@ -2276,7 +2255,7 @@ Elm.Main.make = function (_elm) {
                                      40,
                                      50)
                                      ,A3(toPos,lava(1000),70,80)
-                                     ,A3(toPos,monster,140,142)
+                                     ,A3(toPos,monster,160,162)
                                      ,A3(toPos,monster,180,182)
                                      ,A3(toPos,wall,200,230)])};
    var level1 = {_: {}
@@ -2285,57 +2264,19 @@ Elm.Main.make = function (_elm) {
                 ,front: _L.fromArray([A3(toPos,
                                      lava(0),
                                      60,
-                                     70)
+                                     65)
                                      ,A3(toPos,wave(120),120,122)
                                      ,A3(toPos,lava(0),250,260)
                                      ,A3(toPos,
                                      exit(level2),
                                      300,
                                      330)])};
-   var Level = F3(function (a,
-   b,
-   c) {
-      return {_: {}
-             ,back: b
-             ,desc: c
-             ,front: a};
-   });
-   var defaultGame = {_: {}
-                     ,back: _L.fromArray([])
-                     ,desc: ""
-                     ,front: _L.fromArray([])
-                     ,killedBy: "are flat"
-                     ,player: {_: {}
-                              ,alive: false
-                              ,h: 15
-                              ,l: 15}
-                     ,resetTo: level1
-                     ,time: 0};
-   var reset = function (level) {
-      return function () {
-         var $ = level,
-         front = $.front,
-         back = $.back,
-         desc = $.desc;
-         return _U.replace([["front"
-                            ,front]
-                           ,["back",back]
-                           ,["resetTo",level]
-                           ,["desc",desc]
-                           ,["player"
-                            ,{_: {}
-                             ,alive: true
-                             ,h: 15
-                             ,l: 15}]],
-         defaultGame);
-      }();
-   };
    var checkWin = function (g) {
       return function () {
          var isExit = function (o) {
             return function () {
-               var _v35 = o.thing;
-               switch (_v35.ctor)
+               var _v30 = o.thing;
+               switch (_v30.ctor)
                {case "Exit": return true;}
                return false;
             }();
@@ -2345,29 +2286,48 @@ Elm.Main.make = function (_elm) {
             switch (_.ctor)
             {case "_Tuple2": return _._0;}
             _U.badCase($moduleName,
-            "on line 178, column 21 to 36");
+            "on line 171, column 21 to 36");
          }();
          var next = function () {
-            var _v40 = exit.thing;
-            switch (_v40.ctor)
-            {case "Exit": return _v40._0;}
+            var _v35 = exit.thing;
+            switch (_v35.ctor)
+            {case "Exit": return _v35._0;}
             return level1;
          }();
          return A2(doCollide,
          exit,
-         g.player) ? reset(next) : g;
+         g.player) ? reset(_U.replace([["resetTo"
+                                       ,next]
+                                      ,["killedBy","Checkpoint!"]],
+         g)) : g;
       }();
    };
-   var stepGame = F2(function (_v42,
+   var stepGame = F2(function (_v37,
    g) {
       return function () {
-         return $Basics.not(g.player.alive) && _v42.userInput.space ? reset(g.resetTo) : checkWin(checkDeath(updateLists(updateWorld(_v42.timeDelta)(A2(movePlayer,
-         _v42.timeDelta,
-         _v42.userInput)(_U.replace([["time"
-                                     ,g.time + _v42.timeDelta]],
+         return checkWin(checkDeath(updateLists(updateWorld(_v37.timeDelta)(A2(movePlayer,
+         _v37.timeDelta,
+         _v37.userInput)(_U.replace([["time"
+                                     ,g.time + _v37.timeDelta]],
          g))))));
       }();
    });
+   var Level = F3(function (a,
+   b,
+   c) {
+      return {_: {}
+             ,back: b
+             ,desc: c
+             ,front: a};
+   });
+   var defaultGame = reset({_: {}
+                           ,back: _L.fromArray([])
+                           ,desc: ""
+                           ,front: _L.fromArray([])
+                           ,killedBy: "Move with\narrow keys"
+                           ,player: {_: {},h: 5,l: 5}
+                           ,resetTo: level1
+                           ,time: 0});
    var GameState = F7(function (a,
    b,
    c,
@@ -2390,19 +2350,17 @@ Elm.Main.make = function (_elm) {
              ,userInput: b};
    });
    var userInput = function () {
-      var f = F3(function (w,a,s) {
+      var f = F2(function (w,a) {
          return {_: {}
-                ,space: s
-                ,x: _U.eq(w.y,
-                0) ? $Basics.toFloat(a.y) : $Basics.toFloat(w.y)};
+                ,x: $Basics.toFloat($Basics.min(1)(A2($Basics.max,
+                -1,
+                a.y + w.y + a.x + w.x)))};
       });
       return A2($Signal._op["~"],
-      A2($Signal._op["~"],
       A2($Signal._op["<~"],
       f,
       $Keyboard.wasd),
-      $Keyboard.arrows),
-      $Keyboard.space);
+      $Keyboard.arrows);
    }();
    var input = A2($Signal.sampleOn,
    delta,
@@ -2418,10 +2376,9 @@ Elm.Main.make = function (_elm) {
    display,
    $Window.dimensions,
    gameState);
-   var UserInput = F2(function (a,
-   b) {
-      return {_: {},space: b,x: a};
-   });
+   var UserInput = function (a) {
+      return {_: {},x: a};
+   };
    _elm.Main.values = {_op: _op
                       ,UserInput: UserInput
                       ,userInput: userInput
@@ -2456,13 +2413,11 @@ Elm.Main.make = function (_elm) {
                       ,checkDeath: checkDeath
                       ,deathCause: deathCause
                       ,movePlayer: movePlayer
-                      ,firsts: firsts
                       ,doCollide: doCollide
+                      ,firsts: firsts
                       ,first: first
                       ,display: display
-                      ,displayAlive: displayAlive
-                      ,displayDead: displayDead
-                      ,colorAt: colorAt
+                      ,hue: hue
                       ,colorFrom: colorFrom
                       ,delta: delta
                       ,input: input
