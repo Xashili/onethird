@@ -2758,7 +2758,7 @@ Elm.HidLine.make = function (_elm) {
             return A3($Graphics$Element.container,
               _v8._0,
               _v8._1,
-              $Graphics$Element.middle)($Markdown.toElement("# h1Dline\n\n[Music](http://opengameart.org/content/strange-dungeon-theme)\nby [Patrick Maney](http://opengameart.org/users/bbandrage).\nThis first person 1D dungeon crawler is written in [Elm](http://elm-lang.org/) by [Christian Widera](https://github.com/Xashili).\nSorry, color blind people!\n"));}
+              $Graphics$Element.middle)($Markdown.toElement("# h1d-line\n\n[Music](http://opengameart.org/content/strange-dungeon-theme)\nby [Patrick Maney](http://opengameart.org/users/bbandrage).\nThis first person 1D dungeon crawler is written in [Elm](http://elm-lang.org/) by [Christian Widera](https://github.com/Xashili).\nSorry, color blind people!\n"));}
          _U.badCase($moduleName,
          "between lines 350 and 356");
       }();
